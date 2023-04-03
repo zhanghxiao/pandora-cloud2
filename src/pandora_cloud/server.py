@@ -20,10 +20,11 @@ class ChatBot:
     __default_port = 8018
     __build_id = 'tTShkecJDS0nIc9faO2vC'
 
-    def __init__(self, proxy, debug=False, sentry=False):
+    def __init__(self, proxy, debug=False, sentry=False, login_local=False):
         self.proxy = proxy
         self.debug = debug
         self.sentry = sentry
+        self.login_local = login_local
         self.log_level = logging.DEBUG if debug else logging.WARN
 
         hook_logging(level=self.log_level, format='[%(asctime)s] %(levelname)s in %(module)s: %(message)s')
@@ -109,7 +110,7 @@ class ChatBot:
 
         if username and password:
             try:
-                access_token = Auth0(username, password, self.proxy).auth()
+                access_token = Auth0(username, password, self.proxy).auth(self.login_local)
                 payload = check_access_token(access_token)
 
                 resp = make_response('please wait...', 302)
