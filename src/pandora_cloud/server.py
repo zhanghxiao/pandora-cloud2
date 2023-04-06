@@ -2,6 +2,7 @@
 
 import logging
 from datetime import datetime
+from os import getenv
 from os.path import join, abspath, dirname
 
 from flask import Flask, jsonify, request, render_template, redirect, url_for, make_response
@@ -26,6 +27,7 @@ class ChatBot:
         self.sentry = sentry
         self.login_local = login_local
         self.log_level = logging.DEBUG if debug else logging.WARN
+        self.api_prefix = getenv('CHATGPT_API_PREFIX', 'https://chat.gateway.do')
 
         hook_logging(level=self.log_level, format='[%(asctime)s] %(levelname)s in %(module)s: %(message)s')
         self.logger = logging.getLogger('waitress')
@@ -99,9 +101,8 @@ class ChatBot:
 
         return resp
 
-    @staticmethod
-    def login():
-        return render_template('login.html')
+    def login(self):
+        return render_template('login.html', api_prefix=self.api_prefix)
 
     def login_post(self):
         username = request.form.get('username')
@@ -121,7 +122,7 @@ class ChatBot:
             except Exception as e:
                 error = str(e)
 
-        return render_template('login.html', username=username, error=error)
+        return render_template('login.html', username=username, error=error, api_prefix=self.api_prefix)
 
     def login_token(self):
         access_token = request.form.get('access_token')
@@ -175,7 +176,7 @@ class ChatBot:
             'scriptLoader': []
         }
 
-        return render_template('chat.html', pandora_sentry=self.sentry, props=props)
+        return render_template('chat.html', pandora_sentry=self.sentry, api_prefix=self.api_prefix, props=props)
 
     def session(self):
         err, user_id, email, access_token, payload = self.__get_userinfo()
