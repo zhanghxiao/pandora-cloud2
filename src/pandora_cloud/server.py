@@ -32,7 +32,7 @@ class ChatBot:
         hook_logging(level=self.log_level, format='[%(asctime)s] %(levelname)s in %(module)s: %(message)s')
         self.logger = logging.getLogger('waitress')
 
-    def run(self, bind_str):
+    def run(self, bind_str, threads=4):
         host, port = self.__parse_bind(bind_str)
 
         resource_path = abspath(join(dirname(__file__), 'flask'))
@@ -59,7 +59,7 @@ class ChatBot:
             self.logger.warning('Serving on http://{}:{}'.format(host, port))
 
         WSGIRequestHandler.protocol_version = 'HTTP/1.1'
-        serve(app, host=host, port=port, ident=None)
+        serve(app, host=host, port=port, ident=None, threads=threads)
 
     @staticmethod
     def __after_request(resp):
