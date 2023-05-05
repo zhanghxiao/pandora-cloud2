@@ -19,7 +19,7 @@ from . import __version__
 class ChatBot:
     __default_ip = '127.0.0.1'
     __default_port = 8018
-    __build_id = 'tTShkecJDS0nIc9faO2vC'
+    __build_id = 'Ug4VsRcis1rOKSKp_XHna'
 
     def __init__(self, proxy, debug=False, sentry=False, login_local=False):
         self.proxy = proxy
@@ -44,16 +44,17 @@ class ChatBot:
 
         app.route('/api/auth/session')(self.session)
         app.route('/api/accounts/check')(self.check)
-        app.route('/api/auth/signout', methods=['POST'])(self.logout)
-        app.route('/_next/data/{}/chat.json'.format(self.__build_id))(self.chat_info)
+        app.route('/auth/logout')(self.logout)
+        app.route('/_next/data/{}/index.json'.format(self.__build_id))(self.chat_info)
+        app.route('/_next/data/{}/c/<conversation_id>.json'.format(self.__build_id))(self.chat_info)
 
         app.route('/')(self.chat)
-        app.route('/chat')(self.chat)
-        app.route('/chat/<conversation_id>')(self.chat)
+        app.route('/c')(self.chat)
+        app.route('/c/<conversation_id>')(self.chat)
 
-        app.route('/login')(self.login)
-        app.route('/login', methods=['POST'])(self.login_post)
-        app.route('/login_token', methods=['POST'])(self.login_token)
+        app.route('/auth/login')(self.login)
+        app.route('/auth/login', methods=['POST'])(self.login_post)
+        app.route('/auth/login_token', methods=['POST'])(self.login_token)
 
         if not self.debug:
             self.logger.warning('Serving on http://{}:{}'.format(host, port))
@@ -96,7 +97,7 @@ class ChatBot:
         return False, user_id, email, access_token, payload
 
     def logout(self):
-        resp = jsonify({'url': url_for('login')})
+        resp = redirect(url_for('login'))
         self.__set_cookie(resp, '', 0)
 
         return resp
@@ -115,7 +116,7 @@ class ChatBot:
                 payload = check_access_token(access_token)
 
                 resp = make_response('please wait...', 302)
-                resp.headers.set('Location', url_for('chat'))
+                resp.headers.set('Location', '/')
                 self.__set_cookie(resp, access_token, payload['exp'])
 
                 return resp
@@ -132,7 +133,7 @@ class ChatBot:
             try:
                 payload = check_access_token(access_token)
 
-                resp = jsonify({'code': 0, 'url': url_for('chat')})
+                resp = jsonify({'code': 0, 'url': '/'})
                 self.__set_cookie(resp, access_token, payload['exp'])
 
                 return resp
@@ -155,7 +156,7 @@ class ChatBot:
                         'email': email,
                         'image': None,
                         'picture': None,
-                        'groups': []
+                        'groups': [],
                     },
                     'serviceStatus': {},
                     'userCountry': 'US',
@@ -168,15 +169,16 @@ class ChatBot:
                 },
                 '__N_SSP': True
             },
-            'page': '/chat/[[...chatId]]',
-            'query': {'chatId': [conversation_id]} if conversation_id else {},
+            'page': '/c/[chatId]' if conversation_id else '/',
+            'query': {'chatId': conversation_id} if conversation_id else {},
             'buildId': self.__build_id,
             'isFallback': False,
             'gssp': True,
             'scriptLoader': []
         }
 
-        return render_template('chat.html', pandora_sentry=self.sentry, api_prefix=self.api_prefix, props=props)
+        template = 'detail.html' if conversation_id else 'chat.html'
+        return render_template(template, pandora_sentry=self.sentry, api_prefix=self.api_prefix, props=props)
 
     def session(self):
         err, user_id, email, access_token, payload = self.__get_userinfo()
@@ -190,7 +192,7 @@ class ChatBot:
                 'email': email,
                 'image': None,
                 'picture': None,
-                'groups': []
+                'groups': [],
             },
             'expires': datetime.utcfromtimestamp(payload['exp']).isoformat(),
             'accessToken': access_token
@@ -198,10 +200,10 @@ class ChatBot:
 
         return jsonify(ret)
 
-    def chat_info(self):
+    def chat_info(self, conversation_id=None):
         err, user_id, email, _, _ = self.__get_userinfo()
         if err:
-            return jsonify({'pageProps': {'__N_REDIRECT': '/login', '__N_REDIRECT_STATUS': 307}, '__N_SSP': True})
+            return jsonify({'pageProps': {'__N_REDIRECT': '/auth/login?', '__N_REDIRECT_STATUS': 307}, '__N_SSP': True})
 
         ret = {
             'pageProps': {
@@ -211,7 +213,7 @@ class ChatBot:
                     'email': email,
                     'image': None,
                     'picture': None,
-                    'groups': []
+                    'groups': [],
                 },
                 'serviceStatus': {},
                 'userCountry': 'US',
@@ -246,6 +248,14 @@ class ChatBot:
                 'model_preview',
                 'system_message',
                 'can_continue',
+                'data_controls_enabled',
+                'data_export_enabled',
+                'show_existing_user_age_confirmation_modal',
+                'bucketed_history',
+                'priority_driven_models_list',
+                'message_style_202305',
+                'layout_may_2023',
+                'debug',
             ],
         }
 
