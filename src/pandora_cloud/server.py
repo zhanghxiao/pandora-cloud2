@@ -19,7 +19,7 @@ from . import __version__
 class ChatBot:
     __default_ip = '127.0.0.1'
     __default_port = 8018
-    __build_id = 'Ug4VsRcis1rOKSKp_XHna'
+    __build_id = '35uzIQibpwv56FyPcgmGz'
 
     def __init__(self, proxy, debug=False, sentry=False, login_local=False):
         self.proxy = proxy
@@ -32,7 +32,7 @@ class ChatBot:
         hook_logging(level=self.log_level, format='[%(asctime)s] %(levelname)s in %(module)s: %(message)s')
         self.logger = logging.getLogger('waitress')
 
-    def run(self, bind_str, threads=4):
+    def run(self, bind_str, threads=8):
         host, port = self.__parse_bind(bind_str)
 
         resource_path = abspath(join(dirname(__file__), 'flask'))
@@ -51,6 +51,9 @@ class ChatBot:
         app.route('/')(self.chat)
         app.route('/c')(self.chat)
         app.route('/c/<conversation_id>')(self.chat)
+
+        app.route('/chat')(self.chat_index)
+        app.route('/chat/<conversation_id>')(self.chat_index)
 
         app.route('/auth/login')(self.login)
         app.route('/auth/login', methods=['POST'])(self.login_post)
@@ -95,6 +98,12 @@ class ChatBot:
         email = payload['https://api.openai.com/profile']['email']
 
         return False, user_id, email, access_token, payload
+
+    @staticmethod
+    def chat_index(conversation_id=None):
+        resp = redirect('/')
+
+        return resp
 
     def logout(self):
         resp = redirect(url_for('login'))
@@ -147,6 +156,10 @@ class ChatBot:
         if err:
             return redirect(url_for('login'))
 
+        query = request.args.to_dict()
+        if conversation_id:
+            query['chatId'] = conversation_id
+
         props = {
             'props': {
                 'pageProps': {
@@ -170,7 +183,7 @@ class ChatBot:
                 '__N_SSP': True
             },
             'page': '/c/[chatId]' if conversation_id else '/',
-            'query': {'chatId': conversation_id} if conversation_id else {},
+            'query': query,
             'buildId': self.__build_id,
             'isFallback': False,
             'gssp': True,
@@ -195,7 +208,8 @@ class ChatBot:
                 'groups': [],
             },
             'expires': datetime.utcfromtimestamp(payload['exp']).isoformat(),
-            'accessToken': access_token
+            'accessToken': access_token,
+            'authProvider': 'auth0',
         }
 
         return jsonify(ret)
@@ -243,8 +257,6 @@ class ChatBot:
             'user_country': 'US',
             'features': [
                 'model_switcher',
-                'dfw_message_feedback',
-                'dfw_inline_message_regen_comparison',
                 'model_preview',
                 'system_message',
                 'can_continue',
@@ -255,6 +267,15 @@ class ChatBot:
                 'priority_driven_models_list',
                 'message_style_202305',
                 'layout_may_2023',
+                'plugins_available',
+                'new_model_switcher_20230512',
+                'beta_features',
+                'infinite_scroll_history',
+                'browsing_available',
+                'browsing_inner_monologue',
+                'tools3_dev',
+                'tools3_admin',
+                'tools2',
                 'debug',
             ],
         }
