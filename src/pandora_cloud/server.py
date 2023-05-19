@@ -268,7 +268,6 @@ class ChatBot:
                 'message_style_202305',
                 'layout_may_2023',
                 'plugins_available',
-                'new_model_switcher_20230512',
                 'beta_features',
                 'infinite_scroll_history',
                 'browsing_available',
