@@ -91,6 +91,8 @@ class ChatBot:
         access_token = request.cookies.get('access-token')
         try:
             payload = check_access_token(access_token)
+            if 'https://api.openai.com/auth' not in payload or 'https://api.openai.com/profile' not in payload:
+                raise Exception('invalid access token')
         except:
             return True, None, None, None, None
 
