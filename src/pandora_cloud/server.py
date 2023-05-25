@@ -19,7 +19,7 @@ from . import __version__
 class ChatBot:
     __default_ip = '127.0.0.1'
     __default_port = 8018
-    __build_id = '35uzIQibpwv56FyPcgmGz'
+    __build_id = 'MYarkpkg17PeZHlffaxc-'
 
     def __init__(self, proxy, debug=False, sentry=False, login_local=False):
         self.proxy = proxy
@@ -43,7 +43,7 @@ class ChatBot:
         app.after_request(self.__after_request)
 
         app.route('/api/auth/session')(self.session)
-        app.route('/api/accounts/check')(self.check)
+        app.route('/api/accounts/check/v4-2023-04-27')(self.check)
         app.route('/auth/logout')(self.logout)
         app.route('/_next/data/{}/index.json'.format(self.__build_id))(self.chat_info)
         app.route('/_next/data/{}/c/<conversation_id>.json'.format(self.__build_id))(self.chat_info)
@@ -248,37 +248,60 @@ class ChatBot:
     @staticmethod
     def check():
         ret = {
-            'account_plan': {
-                'is_paid_subscription_active': True,
-                'subscription_plan': 'chatgptplusplan',
-                'account_user_role': 'account-owner',
-                'was_paid_customer': True,
-                'has_customer_object': True,
-                'subscription_expires_at_timestamp': 3774355199
+            'accounts': {
+                'default': {
+                    'account': {
+                        'account_user_role': 'account-owner',
+                        'account_user_id': 'd0322341-7ace-4484-b3f7-89b03e82b927',
+                        'processor': {
+                            'a001': {
+                                'has_customer_object': True
+                            },
+                            'b001': {
+                                'has_transaction_history': True
+                            }
+                        },
+                        'account_id': 'a323bd05-db25-4e8f-9173-2f0c228cc8fa',
+                        'is_most_recent_expired_subscription_gratis': True,
+                        'has_previously_paid_subscription': True
+                    },
+                    'features': [
+                        'model_switcher',
+                        'model_preview',
+                        'system_message',
+                        'data_controls_enabled',
+                        'data_export_enabled',
+                        'show_existing_user_age_confirmation_modal',
+                        'bucketed_history',
+                        'priority_driven_models_list',
+                        'message_style_202305',
+                        'layout_may_2023',
+                        'plugins_available',
+                        'beta_features',
+                        'infinite_scroll_history',
+                        'browsing_available',
+                        'browsing_inner_monologue',
+                        'browsing_bing_branding',
+                        'shareable_links',
+                        'plugin_display_params',
+                        'tools3_dev',
+                        'tools2',
+                        'debug',
+                    ],
+                    'entitlement': {
+                        'subscription_id': 'd0dcb1fc-56aa-4cd9-90ef-37f1e03576d3',
+                        'has_active_subscription': True,
+                        'subscription_plan': 'chatgptplusplan',
+                        'expires_at': '2089-08-08T23:59:59+00:00'
+                    },
+                    'last_active_subscription': {
+                        'subscription_id': 'd0dcb1fc-56aa-4cd9-90ef-37f1e03576d3',
+                        'purchase_origin_platform': 'chatgpt_mobile_ios',
+                        'will_renew': True
+                    }
+                }
             },
-            'user_country': 'US',
-            'features': [
-                'model_switcher',
-                'model_preview',
-                'system_message',
-                'can_continue',
-                'data_controls_enabled',
-                'data_export_enabled',
-                'show_existing_user_age_confirmation_modal',
-                'bucketed_history',
-                'priority_driven_models_list',
-                'message_style_202305',
-                'layout_may_2023',
-                'plugins_available',
-                'beta_features',
-                'infinite_scroll_history',
-                'browsing_available',
-                'browsing_inner_monologue',
-                'tools3_dev',
-                'tools3_admin',
-                'tools2',
-                'debug',
-            ],
+            'temp_ap_available_at': '2023-05-20T17:30:00+00:00'
         }
 
         return jsonify(ret)
