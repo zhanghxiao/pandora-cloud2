@@ -2,6 +2,10 @@ self.addEventListener('install', event => {
     event.waitUntil(
         caches.open('pandora-cloud-cache').then(function (cache) {
             return cache.addAll([
+                '/apple-touch-icon.png',
+                '/favicon-16x16.png',
+                '/favicon-32x32.png',
+                '/images/share-sidebar-link.png',
                 '/ulp/react-components/1.66.5/css/main.cdn.min.css',
                 '/fonts/colfax/ColfaxAIRegular.woff2',
                 '/fonts/colfax/ColfaxAIRegular.woff',
@@ -53,6 +57,7 @@ self.addEventListener('install', event => {
                 '/_next/static/chunks/pages/share/[[...shareParams]]-0233e94d3495a1c6.js',
                 '/_next/static/chunks/pages/status-6557d60655b68492.js',
                 '/_next/static/chunks/259-c6320349d8f3ff4a.js',
+                '/_next/static/chunks/polyfills-c67a75d1b6f99dc8.js',
             ]);
         })
     );
