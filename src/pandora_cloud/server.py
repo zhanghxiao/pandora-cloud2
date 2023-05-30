@@ -129,7 +129,7 @@ class ChatBot:
         return resp
 
     async def login(self):
-        return render_template('login.html', api_prefix=self.api_prefix, next=request.args.get('next'))
+        return render_template('login.html', api_prefix=self.api_prefix, next=request.args.get('next', ''))
 
     async def login_post(self):
         username = request.form.get('username')
@@ -234,6 +234,10 @@ class ChatBot:
         return jsonify(ret)
 
     async def share_detail(self, share_id):
+        err, user_id, email, _, _ = await self.__get_userinfo()
+        if err:
+            return redirect('/auth/login?next=%2Fshare%2F{}'.format(share_id))
+
         try:
             share_detail = await self.__fetch_share_detail(share_id)
         except:
