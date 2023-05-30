@@ -129,11 +129,12 @@ class ChatBot:
         return resp
 
     async def login(self):
-        return render_template('login.html', api_prefix=self.api_prefix)
+        return render_template('login.html', api_prefix=self.api_prefix, next=request.args.get('next'))
 
     async def login_post(self):
         username = request.form.get('username')
         password = request.form.get('password')
+        next_url = request.form.get('next')
         error = None
 
         if username and password:
@@ -142,7 +143,7 @@ class ChatBot:
                 payload = check_access_token(access_token)
 
                 resp = make_response('please wait...', 302)
-                resp.headers.set('Location', '/')
+                resp.headers.set('Location', next_url if next_url else '/')
                 self.__set_cookie(resp, access_token, payload['exp'])
 
                 return resp
@@ -153,13 +154,14 @@ class ChatBot:
 
     async def login_token(self):
         access_token = request.form.get('access_token')
+        next_url = request.form.get('next')
         error = None
 
         if access_token:
             try:
                 payload = check_access_token(access_token)
 
-                resp = jsonify({'code': 0, 'url': '/'})
+                resp = jsonify({'code': 0, 'url': next_url if next_url else '/'})
                 self.__set_cookie(resp, access_token, payload['exp'])
 
                 return resp
@@ -312,8 +314,13 @@ class ChatBot:
     async def share_continue_info(self, share_id):
         err, user_id, email, access_token, _ = await self.__get_userinfo()
         if err:
-            return jsonify({'pageProps': {'__N_REDIRECT': '/share/{}'.format(share_id), '__N_REDIRECT_STATUS': 308},
-                            '__N_SSP': True})
+            return jsonify({
+                'pageProps': {
+                    '__N_REDIRECT': '/auth/login?next=%2Fshare%2F{}%2Fcontinue'.format(share_id),
+                    '__N_REDIRECT_STATUS': 307
+                },
+                '__N_SSP': True
+            })
 
         share_detail = await self.__fetch_share_detail(share_id)
         if 'continue_conversation_url' in share_detail:
