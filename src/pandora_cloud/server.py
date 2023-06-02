@@ -91,11 +91,14 @@ class ChatBot:
     def __set_cookie(resp, token, expires):
         resp.set_cookie('access-token', token, expires=expires, path='/', domain=None, httponly=True, samesite='Lax')
 
-    @staticmethod
-    async def __get_userinfo():
+    async def __get_userinfo(self):
         access_token = request.cookies.get('access-token')
         try:
             payload = check_access_token(access_token)
+            if True == payload:
+                ti = await self.__fetch_share_tokeninfo(access_token)
+                return False, ti['user_id'], ti['email'], access_token, {'exp': ti['expire_at']}
+
             if 'https://api.openai.com/auth' not in payload or 'https://api.openai.com/profile' not in payload:
                 raise Exception('invalid access token')
         except:
@@ -105,6 +108,16 @@ class ChatBot:
         email = payload['https://api.openai.com/profile']['email']
 
         return False, user_id, email, access_token, payload
+
+    async def __fetch_share_tokeninfo(self, share_token):
+        url = self.api_prefix + '/token/info/{}'.format(share_token)
+
+        async with httpx.AsyncClient(proxies=self.proxy, timeout=30) as client:
+            response = await client.get(url)
+            if response.status_code != 200:
+                raise Exception('failed to fetch share token info')
+
+            return response.json()
 
     async def __fetch_share_detail(self, share_id):
         url = self.api_prefix + '/api/share/{}'.format(share_id)
@@ -161,6 +174,9 @@ class ChatBot:
         if access_token:
             try:
                 payload = check_access_token(access_token)
+                if True == payload:
+                    ti = await self.__fetch_share_tokeninfo(access_token)
+                    payload = {'exp': ti['expire_at']}
 
                 resp = jsonify({'code': 0, 'url': next_url if next_url else '/'})
                 self.__set_cookie(resp, access_token, payload['exp'])
@@ -317,7 +333,7 @@ class ChatBot:
         return jsonify(props)
 
     async def share_continue_info(self, share_id):
-        err, user_id, email, access_token, _ = await self.__get_userinfo()
+        err, user_id, email, _, _ = await self.__get_userinfo()
         if err:
             return jsonify({
                 'pageProps': {
