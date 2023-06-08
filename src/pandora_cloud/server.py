@@ -46,6 +46,7 @@ class ChatBot:
         app.route('/api/auth/session')(self.session)
         app.route('/api/accounts/check/v4-2023-04-27')(self.check)
         app.route('/auth/logout')(self.logout)
+        app.route('/error/404')(self.error404)
         app.route('/_next/data/{}/index.json'.format(self.__build_id))(self.chat_info)
         app.route('/_next/data/{}/c/<conversation_id>.json'.format(self.__build_id))(self.chat_info)
         app.route('/_next/data/{}/share/<share_id>.json'.format(self.__build_id))(self.share_info)
@@ -252,6 +253,21 @@ class ChatBot:
         }
 
         return jsonify(ret)
+
+    async def error404(self):
+        props = {
+            'props': {
+                'pageProps': {'statusCode': 404}
+            },
+            'page': '/_error',
+            'query': {},
+            'buildId': self.__build_id,
+            'nextExport': True,
+            'isFallback': False,
+            'gip': True,
+            'scriptLoader': []
+        }
+        return render_template('404.html', pandora_sentry=self.sentry, api_prefix=self.api_prefix, props=props)
 
     async def share_detail(self, share_id):
         err, user_id, email, _, _ = await self.__get_userinfo()
