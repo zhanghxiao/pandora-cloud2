@@ -20,7 +20,7 @@ from . import __version__
 class ChatBot:
     __default_ip = '127.0.0.1'
     __default_port = 8018
-    __build_id = 'm__df_2bcLUqGXlko-rBN'
+    __build_id = 'oDTsXIohP85MnLZj7TlaB'
 
     def __init__(self, proxy, debug=False, sentry=False, login_local=False):
         self.proxy = proxy
@@ -227,7 +227,7 @@ class ChatBot:
 
         query = request.args.to_dict()
         if conversation_id:
-            query['chatId'] = conversation_id
+            query['default'] = ['c', conversation_id]
 
         props = {
             'props': {
@@ -251,7 +251,7 @@ class ChatBot:
                 },
                 '__N_SSP': True
             },
-            'page': '/c/[chatId]' if conversation_id else '/',
+            'page': '/[[...default]]',
             'query': query,
             'buildId': self.__build_id,
             'isFallback': False,
@@ -476,59 +476,75 @@ class ChatBot:
 
     @staticmethod
     async def check():
+        account_info = {
+            'account': {
+                'account_user_role': 'account-owner',
+                'account_user_id': 'd0322341-7ace-4484-b3f7-89b03e82b927',
+                'processor': {
+                    'a001': {
+                        'has_customer_object': True
+                    },
+                    'b001': {
+                        'has_transaction_history': False
+                    },
+                    'c001': {
+                        'has_transaction_history': False
+                    },
+                },
+                'account_id': 'a323bd05-db25-4e8f-9173-2f0c228cc8fa',
+                'is_most_recent_expired_subscription_gratis': False,
+                'has_previously_paid_subscription': True,
+                'name': None,
+                'structure': 'personal',
+            },
+            'features': [
+                'model_switcher',
+                "model_switcher_upsell",
+                'priority_driven_models_list',
+                'message_style_202305',
+                'layout_may_2023',
+                'plugins_available',
+                'beta_features',
+                'browsing_publisher_red_team',
+                'browsing_inner_monologue',
+                'new_plugin_oauth_endpoint',
+                'code_interpreter_available',
+                'chat_preferences_available',
+                'plugin_review_tools',
+                'message_debug_info',
+                "allow_url_thread_creation",
+                "persist_last_used_model",
+                "allow_continue",
+                "user_latency_tools",
+                "share_multimodal_links",
+                "starter_prompts",
+                'shareable_links',
+                'tools3_dev',
+                'tools2',
+                'debug',
+                "ks",
+            ],
+            'entitlement': {
+                'subscription_id': 'd0dcb1fc-56aa-4cd9-90ef-37f1e03576d3',
+                'has_active_subscription': True,
+                'subscription_plan': 'chatgptplusplan',
+                'expires_at': '2089-08-08T23:59:59+00:00'
+            },
+            'last_active_subscription': {
+                'subscription_id': 'd0dcb1fc-56aa-4cd9-90ef-37f1e03576d3',
+                'purchase_origin_platform': 'chatgpt_web',
+                'will_renew': True
+            }
+        }
+
         ret = {
             'accounts': {
-                'default': {
-                    'account': {
-                        'account_user_role': 'account-owner',
-                        'account_user_id': 'd0322341-7ace-4484-b3f7-89b03e82b927',
-                        'processor': {
-                            'a001': {
-                                'has_customer_object': True
-                            },
-                            'b001': {
-                                'has_transaction_history': True
-                            }
-                        },
-                        'account_id': 'a323bd05-db25-4e8f-9173-2f0c228cc8fa',
-                        'is_most_recent_expired_subscription_gratis': True,
-                        'has_previously_paid_subscription': True,
-                        'name': None,
-                        'structure': 'personal',
-                    },
-                    'features': [
-                        'model_switcher',
-                        'system_message',
-                        'priority_driven_models_list',
-                        'message_style_202305',
-                        'layout_may_2023',
-                        'plugins_available',
-                        'beta_features',
-                        'infinite_scroll_history',
-                        'browsing_inner_monologue',
-                        'new_plugin_oauth_endpoint',
-                        'code_interpreter_available',
-                        'chat_preferences_available',
-                        'plugin_review_tools',
-                        'message_debug_info',
-                        'shareable_links',
-                        'tools3_dev',
-                        'tools2',
-                        'debug',
-                    ],
-                    'entitlement': {
-                        'subscription_id': 'd0dcb1fc-56aa-4cd9-90ef-37f1e03576d3',
-                        'has_active_subscription': True,
-                        'subscription_plan': 'chatgptplusplan',
-                        'expires_at': '2089-08-08T23:59:59+00:00'
-                    },
-                    'last_active_subscription': {
-                        'subscription_id': 'd0dcb1fc-56aa-4cd9-90ef-37f1e03576d3',
-                        'purchase_origin_platform': 'chatgpt_mobile_ios',
-                        'will_renew': True
-                    }
-                }
+                'a323bd05-db25-4e8f-9173-2f0c228cc8fa': account_info,
+                'default': account_info,
             },
+            'account_ordering': [
+                'a323bd05-db25-4e8f-9173-2f0c228cc8fa'
+            ],
         }
 
         return jsonify(ret)
