@@ -69,7 +69,7 @@ self.addEventListener('install', event => {
                 '/_next/static/chunks/68a27ff6-f9f204be935e10d1.js',
                 '/_next/static/chunks/7483-2c0a5d1877c6da1d.js',
                 '/_next/static/chunks/7638-b75c3ed66fbe3e25.js',
-                '/_next/static/chunks/7851-f028dc8368e400ff.js',
+                '/_next/static/chunks/7851-f028dc8368e400fe.js',
                 '/_next/static/chunks/8937-e8acc7b8fc475182.js',
                 '/_next/static/chunks/8948-6595c46a7bd0d3d3.js',
                 '/_next/static/chunks/9271.5e44d7888ace4397.js',
