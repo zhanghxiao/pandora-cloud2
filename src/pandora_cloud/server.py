@@ -523,7 +523,6 @@ class ChatBot:
                 'user_latency_tools',
                 'tools3_dev',
                 'debug',
-                'unified_tool_ui',
                 'workspace_share_links',
                 'retrieval_poll_ui',
                 'sunshine_available',
