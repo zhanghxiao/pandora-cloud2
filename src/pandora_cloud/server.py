@@ -20,7 +20,7 @@ from . import __version__
 class ChatBot:
     __default_ip = '127.0.0.1'
     __default_port = 8018
-    __build_id = 'oDTsXIohP85MnLZj7TlaB'
+    __build_id = 'VkDNisWOezhjENf61sgQl'
 
     def __init__(self, proxy, debug=False, sentry=False, login_local=False):
         self.proxy = proxy
@@ -247,6 +247,9 @@ class ChatBot:
                         'paid': {},
                         'public': {}
                     },
+                    'allowBrowserStorage': True,
+                    'canManageBrowserStorage': False,
+                    'ageVerificationDeadline': None,
                     'isUserInCanPayGroup': True
                 },
                 '__N_SSP': True
@@ -254,6 +257,7 @@ class ChatBot:
             'page': '/[[...default]]',
             'query': query,
             'buildId': self.__build_id,
+            'assetPrefix': '',
             'isFallback': False,
             'gssp': True,
             'scriptLoader': []
@@ -291,6 +295,7 @@ class ChatBot:
             'page': '/_error',
             'query': {},
             'buildId': self.__build_id,
+            'assetPrefix': '',
             'nextExport': True,
             'isFallback': False,
             'gip': True,
@@ -313,6 +318,7 @@ class ChatBot:
                 'page': '/_error',
                 'query': {},
                 'buildId': self.__build_id,
+                'assetPrefix': '',
                 'nextExport': True,
                 'isFallback': False,
                 'gip': True,
@@ -343,6 +349,7 @@ class ChatBot:
                 'shareParams': [share_id]
             },
             'buildId': self.__build_id,
+            'assetPrefix': '',
             'isFallback': False,
             'gssp': True,
             'scriptLoader': []
@@ -413,6 +420,9 @@ class ChatBot:
                     'paid': {},
                     'public': {}
                 },
+                'allowBrowserStorage': True,
+                'canManageBrowserStorage': False,
+                'ageVerificationDeadline': None,
                 'isUserInCanPayGroup': True,
                 'sharedConversationId': share_id,
                 'serverResponse': {
@@ -437,6 +447,9 @@ class ChatBot:
                         'paid': {},
                         'public': {}
                     },
+                    'allowBrowserStorage': True,
+                    'canManageBrowserStorage': False,
+                    'ageVerificationDeadline': None,
                     'isUserInCanPayGroup': True,
                 },
             },
@@ -467,7 +480,10 @@ class ChatBot:
                     'paid': {},
                     'public': {}
                 },
-                'isUserInCanPayGroup': True
+                'allowBrowserStorage': True,
+                'canManageBrowserStorage': False,
+                'ageVerificationDeadline': None,
+                'isUserInCanPayGroup': True,
             },
             '__N_SSP': True
         }
@@ -479,7 +495,7 @@ class ChatBot:
         account_info = {
             'account': {
                 'account_user_role': 'account-owner',
-                'account_user_id': 'd0322341-7ace-4484-b3f7-89b03e82b927',
+                'account_user_id': 'user-000000000000000000000000__a323bd05-db25-4e8f-9173-2f0c228cc8fa',
                 'processor': {
                     'a001': {
                         'has_customer_object': True
@@ -492,37 +508,45 @@ class ChatBot:
                     },
                 },
                 'account_id': 'a323bd05-db25-4e8f-9173-2f0c228cc8fa',
+                'organization_id': None,
                 'is_most_recent_expired_subscription_gratis': False,
                 'has_previously_paid_subscription': True,
                 'name': None,
                 'structure': 'personal',
+                'promo_data': {},
             },
             'features': [
-                'model_switcher',
-                "model_switcher_upsell",
                 'priority_driven_models_list',
-                'message_style_202305',
-                'layout_may_2023',
-                'plugins_available',
-                'beta_features',
                 'browsing_publisher_red_team',
-                'browsing_inner_monologue',
-                'new_plugin_oauth_endpoint',
-                'code_interpreter_available',
-                'chat_preferences_available',
                 'plugin_review_tools',
                 'message_debug_info',
-                "allow_url_thread_creation",
-                "persist_last_used_model",
-                "allow_continue",
-                "user_latency_tools",
-                "share_multimodal_links",
-                "starter_prompts",
-                'shareable_links',
+                'user_latency_tools',
                 'tools3_dev',
-                'tools2',
                 'debug',
-                "ks",
+                'unified_tool_ui',
+                'workspace_share_links',
+                'retrieval_poll_ui',
+                'sunshine_available',
+                'use_stream_processor',
+                'voice_available',
+                'i18n',
+                'model_switcher',
+                'persist_last_used_model',
+                'code_interpreter_available',
+                'breeze_available',
+                'beta_features',
+                'starter_prompts',
+                'browsing_available',
+                'new_plugin_oauth_endpoint',
+                'dalle_3',
+                'layout_may_2023',
+                'shareable_links',
+                'allow_url_thread_creation',
+                'invite_referral',
+                'plugins_available',
+                'ks',
+                'chat_preferences_available',
+                'model_switcher_upsell'
             ],
             'entitlement': {
                 'subscription_id': 'd0dcb1fc-56aa-4cd9-90ef-37f1e03576d3',
