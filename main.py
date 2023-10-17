@@ -2,7 +2,7 @@
 
 from os import getenv
 
-from pandora_cloud.server import ChatBot
+from src.pandora_cloud.server import ChatBot
 
 _port = getenv('PORT')
 _proxy = getenv('PANDORA_PROXY')
