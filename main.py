@@ -10,9 +10,7 @@ _debug = getenv('PANDORA_DEBUG', 'false').lower() == 'true'
 _local = getenv('PANDORA_LOGIN_LOCAL', 'false').lower() == 'true'
 _listen = getenv('PANDORA_SERVER_LISTEN', 'true').lower() == 'true'
 _server = getenv('PANDORA_SERVER', '0.0.0.0:{}'.format(_port) if _port else '0.0.0.0')
-
-if __name__=='__main__':
-    app = ChatBot(proxy=_proxy, debug=_debug, login_local=_local).run(_server, listen=_listen)
+app = ChatBot(proxy=_proxy, debug=_debug, login_local=_local).run(_server, listen=_listen)
 
 
 # from src.pandora_cloud.server import app
