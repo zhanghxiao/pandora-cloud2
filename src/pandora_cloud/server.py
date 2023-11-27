@@ -95,8 +95,8 @@ class ChatBot:
 
     @staticmethod
     def __get_api_prefix():
-        # default = 'https://ai-{}.fakeopen.com'.format((datetime.now() - timedelta(days=1)).strftime('%Y%m%d'))
-        default = 'https://ai.fakeopen.com'
+        default = 'https://ai-{}.fakeopen.com'.format((datetime.now() - timedelta(days=1)).strftime('%Y%m%d'))
+        # default = 'https://ai.fakeopen.com'
         return getenv('CHATGPT_API_PREFIX', default)
 
     @staticmethod
